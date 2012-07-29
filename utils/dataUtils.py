@@ -163,7 +163,7 @@ def crc16(data):
 		a=(crc16^(crc16<<4))&0x00FF
 		crc16=(crc16>>8)^(a<<8)^(a<<3)^(a>>4)
 		ofs+=1
-	print 'calc crc for',len(data),crc16
+#	print 'calc crc for',len(data),crc16
 	return crc16
 
 

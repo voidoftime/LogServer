@@ -31,7 +31,7 @@ class LogProtocol:
 	def preparePacket(self,cmd,data=''):
 		#~ packer=RecordPacker()
 		#~ packer.setVarchar2()
-		res=chr(len(self.deviceId))+self.deviceId+chr(cmd)+intToCU32(len(data))+data
+		res=chr(len(utf8ToCp866(self.deviceId)))+utf8ToCp866(self.deviceId)+chr(cmd)+intToCU32(len(data))+data
 		length=len(res)
 		res=intToCU32(length)+res
 		res+=intToCU16(crc16(res))

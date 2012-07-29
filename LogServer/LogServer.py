@@ -37,7 +37,7 @@ class DataProtocol(protocol.Protocol):
 		#~ pass
 
 	def dataReceived(self, data):
-		print 'recv',data
+#		print 'recv',data
 		self.fulldata+=data
 		#~ if self.logProtocol.parsePacket(self.fulldata):
 		try:
@@ -47,6 +47,7 @@ class DataProtocol(protocol.Protocol):
 				if self.logProtocol.cmd==LogProtocolCmds['SendText']:
 					parser=RecordParser(self.logProtocol.packetData)
 					text=parser.getVarcharUtf2()
+					print 'recv text',text
 					#~ l=logs(deviceId=self.logProtocol.deviceId.decode('utf8','ignore').encode('ascii','ignore'),data=text.decode('utf8','ignore').encode('ascii','ignore'),time=int(time.time()))
 					#~ l=logs(deviceId=unicode(self.logProtocol.deviceId),data=unicode(text),time=int(time.time()))
 					l=logs(deviceId=self.logProtocol.deviceId.decode('utf8','ignore'),data=text.decode('utf8','ignore'),time=int(time.time()))
@@ -63,6 +64,7 @@ class DataProtocol(protocol.Protocol):
 					except DoesNotExist:
 						#~ d=Device(deviceId=self.logProtocol.deviceId,ipAddress=self.transport.client[0],lastActivityTime=currentTime)
 						#~ d=Device(deviceId=unicode(self.logProtocol.deviceId),ipAddress=self.transport.client[0],lastActivityTime=currentTime)
+						print 'add new deviceId',self.logProtocol.deviceId
 						d=Device(deviceId=self.logProtocol.deviceId.decode('utf8','ignore'),ipAddress=self.transport.client[0],lastActivityTime=currentTime)
 						d.save()
 						
