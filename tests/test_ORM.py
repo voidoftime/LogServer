@@ -23,6 +23,7 @@ class Test(unittest.TestCase):
 		texts=['utf string','русский текст']
 		for text in texts:
 			self.test_logData(text)
+			self.test_addDevice(text)
 
 	def test_logData(self,text='default test string'):
 		logs.objects().delete()
@@ -32,6 +33,14 @@ class Test(unittest.TestCase):
 		res=logs.objects().get(time=testTime)
 		self.assertEqual(res.deviceId.encode('utf8','ignore'),text)
 		self.assertEqual(res.data.encode('utf8','ignore'),text)
+
+	def test_addDevice(self,text='default test string'):
+		Device.objects().delete()
+		testTime=int(time.time())
+		l=Device(deviceId=text.decode('utf8','ignore'))
+		l.save()
+		res=Device.objects().get(deviceId=text)
+		self.assertEqual(res.deviceId.encode('utf8','ignore'),text)
 
 if __name__=="__main__":
 	unittest.main()
