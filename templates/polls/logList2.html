@@ -1,0 +1,38 @@
+<link rel="stylesheet" type="text/css" href="/static/css/style.css" />
+{{ STATIC_URL }}
+{% if error_message %}<b>{{ error_message }}</b>
+{% else %}no
+{% endif %}
+<div class="divDevicesList">
+{% if devices_list %}
+	<p>Devices</p>
+    <ul>
+    {% for device in devices_list %}
+        <li{% if device.isRecent %} class="recent"{% endif %}><a href="/polls/{{ device.deviceId }}/">{{ device.deviceId }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No devices are available.</p>
+{% endif %}
+</div>
+<div class="divFiltersList">
+{% if filterForm %}
+	<p>Filters</p>
+    <table>
+		{{ filterForm.as_table }}
+    </table>
+{% else %}
+    <p>No filter form</p>
+{% endif %}
+</div>
+<div class="divMessagesList">
+{% if latest_poll_list %}
+	<table class="gridClass">
+    {% for poll in latest_poll_list %}
+        <tr><td>{{ poll.formattedTime }}<td>{{ poll.deviceId }}<td>{{ poll.data }}
+    {% endfor %}
+    </table>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
+</div>

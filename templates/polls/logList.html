@@ -1,0 +1,103 @@
+{% load dajaxice_templatetags %}
+<link rel="stylesheet" type="text/css" href="/static/css/style.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/jquery.tablescroll.css" />
+{% dajaxice_js_import %}
+	<script type="text/javascript" charset="utf-8">
+	//var lastTime=0;
+	var lastTime=Math.round(new Date().getTime()/1000.0);
+		function callback_example1(data){
+			lastTime=data.lastTime;
+			//alert(data.message);
+			table=document.getElementById('messageList');
+			for(var i=0;i<data.message.length;i++)
+			{
+				var rowCount = table.rows.length;
+				var row = table.insertRow(rowCount);
+				for(var col=0;col<data.message[0].length;col++)
+				{
+					var cell = row.insertCell(col);
+					cell.innerHTML = data.message[i][col];
+				}
+			}
+			var scrollBottom = Math.max($('#messageList').height()-$('#divMessagesList').height(), 0);
+			$('#divMessagesList').scrollTop(scrollBottom);
+		}
+
+		function callback_example2(data){
+			for (var i=0; i < data.numbers.length; i++) {
+				alert(data.numbers[i]);
+			}
+		}
+
+		function callback_example3(data){
+			alert(data.result);
+		}
+
+		function callback_example_error(data){
+			alert(data);
+		}
+
+		function callback_complex_example1(data){
+		    alert(data.message);
+		}
+
+		function custom_error(){
+			alert('Custom error');
+		}
+		
+		function doRequest(){
+			Dajaxice.polls.example1(callback_example1,{'lastTime':lastTime});
+			//setInterval(doRequest,1000);
+		}
+
+	</script>
+{% csrf_token %}
+<input type="button" value="Call Example 1! (String)" onclick="doRequest();" /><br/>
+{{ STATIC_URL }}
+{% if error_message %}<b>{{ error_message }}</b>
+{% else %}no
+{% endif %}
+<div class="divDevicesList">
+{% if devices_list %}
+	<p>Devices</p>
+    <ul>
+    {% for device in devices_list %}
+        <li{% if device.isRecent %} class="recent"{% endif %}><a href="/polls/{{ device.deviceId }}/">{{ device.deviceId }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No devices are available.</p>
+{% endif %}
+</div>
+<div class="divMessagesList" id="divMessagesList">
+{% if latest_poll_list %}
+	<table class="gridClass" id="messageList">
+    {% for poll in latest_poll_list %}
+        <tr><td class="mlTimeCol{% if poll.isRecent %} recent{% endif %}">{{ poll.formattedTime }}<td class="mlDICol">{{ poll.deviceId }}<td><pre>{{ poll.formattedData|safe }}</pre>
+    {% endfor %}
+    </table>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
+</div>
+
+<script type="text/javascript" src="/static/js/jquery.min.js"></script>
+<script type="text/javascript" src="/static/js/jquery.tablescroll.js"></script>
+
+<script>
+/*<![CDATA[*/
+
+jQuery(document).ready(function($)
+{
+	//$('#thetable').tableScroll({height:800});
+
+	//$('#thetable2').tableScroll();
+	
+	var scrollBottom = Math.max($('#messageList').height()-$('#divMessagesList').height(), 0);
+    $('#divMessagesList').scrollTop(scrollBottom);
+    
+    //setInterval(doRequest,1000);
+});
+
+/*]]>*/
+</script>
